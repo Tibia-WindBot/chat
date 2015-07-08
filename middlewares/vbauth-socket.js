@@ -45,7 +45,7 @@ module.exports = function (database, options) {
 			  }
 			  this._cookies = headerVal;
 			},
-			clearCookie: function(cookieName) {
+			clearCookie: function(name) {
 	  		var opts = { expires: new Date(1), path: '/' };
 				this.cookie(name, '', opts);
 			},
