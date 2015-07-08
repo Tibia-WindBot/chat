@@ -1,0 +1,31 @@
+{{#if vbuser}}
+  <div class="container">
+    <form class="form-signout" style="max-width: 330px; padding: 15px; margin: 0 auto;" action="/logout" method="POST">
+      <h2 class="form-signin-heading">Already logged in</h2>
+      Welcome <strong>{{vbuser.username}}</strong>
+      {{#if loginStatus}}
+        <div class="alert alert-success" role="alert"><strong>Login status:</strong> {{loginStatus}}</div>
+      {{/if}}
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign out</button>
+    </form>
+  </div> <!-- /container -->
+{{else}}
+  <div class="container">
+    <form class="form-signin" style="max-width: 330px; padding: 15px; margin: 0 auto;" action="/login" method="POST">
+      <h2 class="form-signin-heading">Please sign in</h2>
+      <label for="inputUserName" class="sr-only">Forum User Name</label>
+      <input type="text" name="user" id="inputUserName" class="form-control" placeholder="Forum User Name" required autofocus>
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" name="pass" id="inputPassword" class="form-control" placeholder="Password" required>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" name="remember"> Remember me
+        </label>
+      </div>
+      {{#if loginStatus}}
+        <div class="alert alert-danger" role="alert"><strong>Login status:</strong> {{loginStatus}}</div>
+      {{/if}}
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+  </div> <!-- /container -->
+{{/if}}

@@ -1,0 +1,6 @@
+**/.DS_STORE
+*.sublime-workspace
+node_modules
+build
+config/mysql.production.json
+config/vbauth.production.json
