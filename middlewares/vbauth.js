@@ -22,6 +22,7 @@ module.exports = function(database, options) {
 
 	options = objectAssign({
 		// Used to salt the remember me password before setting the cookie.
+		// The cookieSalt is located at the file 'includes/functions.php' of your vBulletin install
 		cookieSalt: "QS43E7xAe^vXu1nLhZjpUz51rb1@fwyP^mfl3VFI",
 
 		// Cookie prefix used by vBulletin. Defaults to 'bb_'.
