@@ -56,6 +56,12 @@ var onReceive = {
 	},
 	unbanSuccess: function(data) {
 		ChatActions.receiveUnbanSuccess(data);
+	},
+	pong: function(timems) {
+		ChatActions.receivePong(timems);
+	},
+	status: function(info) {
+		ChatActions.receiveStatusMessage(info);
 	}
 };
 
@@ -67,6 +73,8 @@ socket
 .on('set cookies', onReceive.setCookies)
 .on('ban success', onReceive.banSuccess)
 .on('unban success', onReceive.unbanSuccess)
-.on('message', onReceive.message);
+.on('message', onReceive.message)
+.on('status', onReceive.status)
+.on('pong', onReceive.pong);
 
 module.exports = socket;

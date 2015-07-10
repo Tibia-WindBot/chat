@@ -153,47 +153,75 @@ function onBanUser(socket, info) {
 	mysql.query('SELECT userid, usergroupid FROM user WHERE lower(username) = ?', [info.username.toLowerCase()], function(err, result) {
 		if (err) {return console.log(err);}
 
-		if (result.length > 0) {
-			if (socket.vbuser.usergroupid !== 6 && result[0].usergroupid >= 6 && result[0].usergroupid <= 8) {
-				// only admins can ban mods! :p
-				return;
+		if (!result.length || 
+			(socket.vbuser.usergroupid !== 6 && result[0].usergroupid >= 6 && result[0].usergroupid <= 8)) {
+			// only admins can ban mods! :p
+			return;
+		}
+
+		var key = 'user:' + result[0].userid + ':ban';
+		redis.set(key, socket.vbuser.username + info.reason , function(err, rows) {
+			if (err) {return console.log(err);}
+
+			// expire key, if expiration date is specified
+			if (info.time > 0) {
+				redis.expire(key, info.time);
 			}
 
-			var key = 'user:' + result[0].userid + ':ban';
-			redis.set(key, socket.vbuser.username + info.reason , function(err, rows) {
-				if (err) {return console.log(err);}
+			// kicks all connected instances of user
+			kickUserById(result[0].userid);
 
-				// expire key, if expiration date is specified
-				if (info.time > 0) {
-					redis.expire(key, info.time);
-				}
+			// deletes his messages from history
+			deleteUserMessagesFromHistory(info.username);
 
-				// kicks all connected instances of user
-				redis.hgetall('user:' + result[0].userid + ':socketids', function(err, result) {
-					if (err) {return console.log(err);}
+			// tells the other users this user has been banned, and they should hide his messages
+			io.sockets.emit('ban success', {username: info.username, modname: socket.vbuser.username, reason: info.reason});
+		});
+	});
+}
 
-					for (var socketid in result) {
-					    if (result.hasOwnProperty(socketid)) {
-					    	var socketToKick = io.sockets.connected[socketid];
-					    	if (socketToKick) {
-					    		socketToKick.disconnect();
-					    	}
-					    }
-					}
-				});
+function onKickUser(socket, info) {
+	if (!(socket.vbuser.usergroupid >= 6 && socket.vbuser.usergroupid <= 8)) {
+		// only mods can kick
+		return;
+	}
 
-				// deletes his messages from history
-				deleteUserMessagesFromHistory(info.username);
+	if (!info.username || typeof(info.username) !== 'string' || info.username.length < 3 || info.username.length > 25) {
+		return;
+	}
 
-				// tells the other users this user has been banned, and they should hide his messages
-				io.sockets.emit('ban success', {username: info.username, modname: socket.vbuser.username, reason: info.reason});
-			});
+	mysql.query('SELECT userid, usergroupid FROM user WHERE lower(username) = ?', [info.username.toLowerCase()], function(err, result) {
+		if (err) {return console.log(err);}
+
+		if (!result.length || 
+			(socket.vbuser.usergroupid !== 6 && result[0].usergroupid >= 6 && result[0].usergroupid <= 8)) {
+			// only admins can kick mods
+			return;
+		}
+
+		// kicks all connected instances of user
+		kickUserById(result[0].userid);
+	});
+}
+
+// Kicks all connected instances of user
+function kickUserById(userid) {
+	redis.hgetall('user:' + userid + ':socketids', function(err, result) {
+		if (err) {return console.log(err);}
+
+		for (var socketid in result) {
+	    if (result.hasOwnProperty(socketid)) {
+	    	var socketToKick = io.sockets.connected[socketid];
+	    	if (socketToKick) {
+	    		socketToKick.disconnect();
+	    	}
+	    }
 		}
 	});
 }
 
 function onUnbanUser(socket, info) {
-	// only mods can ban!
+	// only mods can unban!
 	if (!(socket.vbuser.usergroupid >= 6 && socket.vbuser.usergroupid <= 8)) {
 		return;
 	}
@@ -205,15 +233,17 @@ function onUnbanUser(socket, info) {
 	mysql.query('SELECT userid FROM user WHERE lower(username) = ?', [info.username.toLowerCase()], function(err, result) {
 		if (err) {return console.log(err);}
 
-		if (result.length > 0) {
-			var key = 'user:' + result[0].userid + ':ban';
-			redis.del(key, function(err, rows) {
-				if (err) {return console.log(err);}
-
-				// tells the other users this user has been unbanned, and they can show his messages again
-				io.sockets.emit('unban success', {username: info.username, modname: socket.vbuser.username, reason: info.reason});
-			});
+		if (!result.length) {
+			return;
 		}
+		
+		var key = 'user:' + result[0].userid + ':ban';
+		redis.del(key, function(err, rows) {
+			if (err) {return console.log(err);}
+
+			// tells the other users this user has been unbanned, and they can show his messages again
+			io.sockets.emit('unban success', {username: info.username, modname: socket.vbuser.username, reason: info.reason});
+		});
 	});
 }
 
@@ -221,17 +251,30 @@ function onRequestStatus(socket) {
 	var os = require('os');
 
 	if (socket.vbuser.usergroupid === 6) {
-		var cpuLoad = os.loadavg();
-		var processUpTime = process.uptime();
+		var info = {
+			cpuLoad: os.loadavg(),
+			mem: [os.freemem(), os.totalmem()],
+			messagesCount: messagesCount,
+			serverUptime: os.uptime(),
+			processUptime: process.uptime(),
+			clients: []
+		};
 
-		var infoMessage = '<div class="well well-sm"><strong>Server Information</strong><br/>Clients connected: ' + clientsCount + '<br/>Messages transmitted: ' + messagesCount + '<br/>CPU Load: ' + cpuLoad[0] + '% (last minute), ' + cpuLoad[1] +'% (last five minutes), ' + cpuLoad[2] + '% (last 15 minutes)<br/>Mem: ' + os.freemem()/1e9 + 'GB / ' + os.totalmem()/1e9 +'GB<br/>Server Uptime: ' + os.uptime() +' seconds<br/>Process Uptime: ' + processUpTime +' seconds</div>';
-		socket.emit('message', {
-			username: 'Server',
-			userid: 0,
-			usergroupid: 0,
-			time: moment().format(),
-			message: infoMessage
-		});
+		var clients = io.sockets.connected;
+		for (var key in clients) {
+			if (clients.hasOwnProperty(key)) {
+				info.clients.push(clients[key].vbuser);
+			}
+		}
+
+		socket.emit('status', info);
+	}
+}
+
+function onPingReceived(socket, timems) {
+	console.log('Ping: ' + timems);
+	if (socket.vbuser.usergroupid >= 6 && socket.vbuser.usergroupid <= 8) {
+		socket.emit('pong', timems);
 	}
 }
 
@@ -245,6 +288,9 @@ io.on('connection', function(socket) {
 	.on('ban', function(info) {
 		onBanUser(socket, info);
 	})
+	.on('kick', function(info) {
+		onKickUser(socket, info);
+	})
 	.on('unban', function(info) {
 		onUnbanUser(socket, info);	
 	})
@@ -253,6 +299,9 @@ io.on('connection', function(socket) {
 	})
 	.on('disconnect', function() {
 		onUserDisconnect(socket);
+	})
+	.on('ping', function(timems) {
+		onPingReceived(socket, timems);
 	});
 });
 

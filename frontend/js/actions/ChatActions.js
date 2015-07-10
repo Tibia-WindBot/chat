@@ -25,13 +25,19 @@ var ChatActions = {
       case '/status':
         this.getServerStatus();
         break;
+      case '/ping':
+        this.ping();
+        break;
+      case '/kick':
+        this.kickUser(cmd[1]);
+        break;
       default: {  
         // Insert a message with all the available commands
         var self = ChatStore.getUserInfo();
 
         var message = '<div class="well well-sm">Available commands:<br/>/help <small><em>- displays a list with all available commands</em></small><br/>/mute \'user name\' <small><em>- mutes the user \'user name\' temporarily, meaning you will no longer see his messages. The mute will last until you reopen WindBot Chat</em></small><br/>/unmute \'user name\' <small><em>- removes the mute from user \'user name\'</em></small>';
         if (self.isMod()) {
-          message += '<br/>/ban \'user name\' \'reason\' 600 <small><em>- bans the user \'user name\' from the chat for 600 seconds. Default reason is none, and default time is 86400 seconds (24h)</em></small><br/>/unban \'user name\' <small><em>- removes the ban from user \'user name\'</em></small>';
+          message += '<br/>/ban \'user name\' \'reason\' 600 <small><em>- bans the user \'user name\' from the chat for 600 seconds. Default reason is none, and default time is 86400 seconds (24h)</em></small><br/>/unban \'user name\' <small><em>- removes the ban from user \'user name\'</em></small><br/>/kick \'user name\' <small><em>- kicks the user \'user name\' from the server</em></small><br/>/ping <small><em>- returns the latency in milliseconds</em></small>';
         }
         message += '</div>';
 
@@ -86,6 +92,35 @@ var ChatActions = {
       username: username,
       reason: reason,
       duration: duration
+    });
+  },
+
+  /**
+   * @param {string} username The user to get kicked
+   * @param {reason} reason Reason why he got kicked
+   */
+  kickUser: function(username, reason) {
+    var self = ChatStore.getUserInfo();
+    if (!self.isMod() || !username || username.length === 0) {
+      return;
+    }
+
+    AppDispatcher
+    .dispatch({
+      actionType: ChatConstants.KICK_USER,
+      username: username,
+      reason: reason
+    });
+  },
+
+  /**
+   * Send a ping message
+   */
+  ping: function() {
+    AppDispatcher
+    .dispatch({
+      actionType: ChatConstants.PING,
+      timems: (new Date()).valueOf()
     });
   },
 
@@ -180,6 +215,26 @@ var ChatActions = {
     AppDispatcher.dispatch({
       actionType: ChatConstants.UNBAN_USER_SUCCESS,
       data: data
+    });
+  },
+
+  /**
+   * @param {object} info The status info
+   */
+  receiveStatusMessage: function(info) {
+    AppDispatcher.dispatch({
+      actionType: ChatConstants.SERVER_STATUS_RECEIVED,
+      data: info
+    });
+  },
+
+  /**
+   * @param {number} timems The time when the first message was sent
+   */
+  receivePong: function(timems) {
+    AppDispatcher.dispatch({
+      actionType: ChatConstants.PONG,
+      timems: timems
     });
   },
 

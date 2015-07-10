@@ -63,5 +63,50 @@ module.exports = {
     }
 
     return ret;
+  },
+
+
+  /*
+   * Converts a time in seconds to a string in format: 'hh:mm:ss'
+   * src: http://stackoverflow.com/questions/6312993/javascript-seconds-to-time-string-with-format-hhmmss
+   * @param {number} sec_num The time in seconds
+   * @return {string} The time formatted in 'hh:mm:ss'
+   */
+  secondsToHHMMSS: function (sec_num) {
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = Math.floor(sec_num - (hours * 3600) - (minutes * 60));
+
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    var time    = hours+'h'+minutes+'m'+seconds+'s';
+
+    return time;
+  },
+
+  /*
+   *
+   */
+  getUserLinkClass: function(usergroupid) {
+    var usergroupClasses = [
+        /*0*/'',
+        /*1*/'user-unregistered',
+        /*2*/'user-registered',
+        /*3*/'user-awaitingconfirmation',
+        /*4*/'user-awaitingmoderation',
+        /*5*/'user-supermoderators',
+        /*6*/'user-admin',
+        /*7*/'user-moderators',
+        /*8*/'user-banned',
+        /*9*/'user-wind-powered',
+        /*10*/'',
+        /*11*/'',
+        /*12*/'user-wind-tester',
+        /*13*/'',
+        /*14*/'user-wind-reseller',
+    ];
+    
+    return 'user-link ' + (usergroupClasses[usergroupid] || '');
   }
 };

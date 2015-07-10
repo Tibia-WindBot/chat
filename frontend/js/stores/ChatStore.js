@@ -4,6 +4,7 @@ var utils = require('../utils/ChatMessage');
 var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 var moment = require('moment');
+var numeral = require('numeral');
 
 var CHANGE_EVENT = 'change';
 var SOCKET_EVENT = 'socket';
@@ -127,6 +128,41 @@ function insertMessage(msg) {
 }
 
 /**
+ * Inserts a message showing the ping time.
+ * @param {number} timems The time when the ping message was sent
+ */
+function pongMessageReceived(timems) {
+  insertMessage('<div class="well well-sm">Ping: ' + ((new Date()).valueOf() - timems) + 'ms</div>');
+}
+
+/**
+ * Formats a status message and inserts it into the chat console.
+ * @param {object} info An object containing the info sent by the server
+ */
+function statusMessageReceived(info) {
+  var clientsCount = 0;
+  var clientsStr = '';
+  info.clients.forEach(function(client) {
+    if (clientsCount) { // Do not prepend a comma for the first connected client
+      clientsStr += ', ';
+    }
+
+    clientsStr += '<a class="' + utils.getUserLinkClass(client.usergroupid) + '" href="https://forums.tibiawindbot.com/member.php?' + client.userid + '-' + client.username + '" target="_blank">' + client.username + '</a>';
+    clientsCount++;
+  });
+
+  insertMessage('<div class="well well-sm"><strong>Server Status</strong>' +
+    '<br/><em>CPU Load:</em> ' + numeral(info.cpuLoad[0]).format('0.0[0]') + '% (last minute), ' + numeral(info.cpuLoad[1]).format('0.0[0]') + '% (last 5 minutes), ' + numeral(info.cpuLoad[1]).format('0.0[0]') + '% (last 15 minutes)' +
+    '<br/><em>Memory:</em> ' + numeral(info.mem[0]/1e9).format('0.0[0]') + 'GB/' + numeral(info.mem[1]/1e9).format('0.0[0]') + 'GB' +
+    '<br/><em>Messages Transmitted: </em> ' + numeral(info.messagesCount).format('0,0') +
+    '<br/><em>Server Uptime:</em> ' + utils.secondsToHHMMSS(info.serverUptime) +
+    '<br/><em>Process Uptime:</em> ' + utils.secondsToHHMMSS(info.processUptime) +
+    '<br/><em>Clients [' + numeral(clientsCount).format('0,0') + ']:</em> ' + clientsStr +
+    '</div>'
+  );
+}
+
+/**
  * Clears everything, happens when the chat disconnects
  */
 function clear() {
@@ -233,6 +269,14 @@ AppDispatcher.register(function(action) {
       userUnbannedReceived(action.data);
       ChatStore.emitChange();
       break;
+    case ChatConstants.SERVER_STATUS_RECEIVED:
+      statusMessageReceived(action.data);
+      ChatStore.emitChange();
+      break;
+    case ChatConstants.PONG:
+      pongMessageReceived(action.timems);
+      ChatStore.emitChange();
+      break;
 
     // Outgoing messages
     case ChatConstants.BAN_USER:
@@ -252,6 +296,15 @@ AppDispatcher.register(function(action) {
       break;
     case ChatConstants.SERVER_STATUS:
       ChatStore.emitSocketMessage('status');
+      break;
+    case ChatConstants.KICK_USER:
+      ChatStore.emitSocketMessage('kick', {
+        username: action.username,
+        reason: action.reason
+      });
+      break;
+    case ChatConstants.PING:
+      ChatStore.emitSocketMessage('ping', action.timems);
       break;
     default:
 			// do nothing

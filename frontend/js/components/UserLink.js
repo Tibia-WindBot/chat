@@ -1,5 +1,6 @@
 var React = require('react');
 var ChatActions = require('../actions/ChatActions');
+var utils = require('../utils/ChatMessage');
 
 var UserLink = React.createClass({
     handleMuteUser: function(e) {
@@ -26,25 +27,6 @@ var UserLink = React.createClass({
               );
         }
 
-        var usergroupClasses = [
-            /*0*/'',
-            /*1*/'user-unregistered',
-            /*2*/'user-registered',
-            /*3*/'user-awaitingconfirmation',
-            /*4*/'user-awaitingmoderation',
-            /*5*/'user-supermoderators',
-            /*6*/'user-admin',
-            /*7*/'user-moderators',
-            /*8*/'user-banned',
-            /*9*/'user-wind-powered',
-            /*10*/'',
-            /*11*/'',
-            /*12*/'user-wind-tester',
-            /*13*/'',
-            /*14*/'user-wind-reseller',
-        ];
-        var linkClass = 'user-link ' + (usergroupClasses[this.props.usergroupid] || '');
-
         var menu = [
             (<li key={'1-' + this.props.unixtime + this.props.userid}><a href={this.props.url} target="_blank"><i className="fa fa-user pull-right"></i>Show profile</a></li>),
             (<li key={'2-' + this.props.unixtime + this.props.userid} onClick={this.handleMuteUser}><a href="#"><i className="fa fa-microphone-slash pull-right"></i>Mute user</a></li>)
@@ -58,7 +40,7 @@ var UserLink = React.createClass({
         return (
           <h5>
             <div className="dropdown">
-                <a className={linkClass} data-target="#" href={this.props.url} data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <a className={utils.getUserLinkClass(this.props.usergroupid)} data-target="#" href={this.props.url} data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                     {this.props.username}<span className="caret"></span>
                 </a>
 
