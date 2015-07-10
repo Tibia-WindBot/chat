@@ -18,7 +18,7 @@ This database will come with a few vBulletin test users:
 | 1      | Admin         | admin         | Admin      | 1        |
 | 2      | Moderator     | mod           | Moderator  | 0        |
 | 3      | User1         | user1         | Registered | 300      |
-| 4      | User1         | user2         | Registered | 200      |
+| 4      | User2         | user2         | Registered | 200      |
 
 If you need to login with any of those users just access: [http://localhost:3001/login](http://localhost:3001/login)
 
