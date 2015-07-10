@@ -37,19 +37,18 @@ function onError(err) {
 		text = '<p>You must be logged in to use WindBot Chat. Follow <a href="https://forums.tibiawindbot.com/login.php?do=login">this link</a> to authenticate.</p>';
 	}
 
-	ChatActions.receiveMessage(utils.buildMessage(text, 'Server'));
+	ChatActions.receiveMessage(text, 'Server', true);
 }
 
 var onReceive = {
 	welcomeMessage: function(data) {
 		ChatActions.receiveInitialData(data);
-		//MessageContainer.shouldScroll = true;
 	},
 	message: function(data) {
 		ChatActions.receiveMessage(data);
 	},
 	setCookies: function(data) {
-		console.log(data);
+		document.cookie = data;
 	},
 	banSuccess: function(data) {
 		ChatActions.receiveBanSuccess(data);

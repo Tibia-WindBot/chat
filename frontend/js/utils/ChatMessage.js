@@ -1,14 +1,26 @@
 var moment = require('moment');
+var marked = require('marked');
 
 module.exports = {
-  buildMessage: function(msg, sendername, senderid, senderusergroup, time) {
-    var ret = {
-      message: msg,
-      userid: senderid || 0,
-      username: sendername || 'Chat Help',
-      usergroupid: senderusergroup || 0,
-      time: time || moment()
-    };
+  buildMessage: function(msg, sendername, isRaw, senderid, senderusergroup, time) {
+    var ret;
+    if (typeof(msg) === 'string') {
+      ret = {
+        userid: senderid || 0,
+        username: sendername || 'Chat Help',
+        usergroupid: senderusergroup || 0,
+        time: time || moment(),
+      };
+
+      if (isRaw) {
+        ret.message = msg;
+      } else {
+        ret.message = marked(msg, {sanitize: true});
+      }
+    } else {
+      ret = msg;
+      ret.message = marked(ret.message.toString(), {sanitize: true});
+    }
 
     return ret;
   },
@@ -106,7 +118,7 @@ module.exports = {
         /*13*/'',
         /*14*/'user-wind-reseller',
     ];
-    
+
     return 'user-link ' + (usergroupClasses[usergroupid] || '');
   }
 };

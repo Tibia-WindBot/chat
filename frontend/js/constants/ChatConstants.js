@@ -18,5 +18,6 @@ module.exports = keymirror({
   KICK_USER: null,
   UNBAN_USER: null,
   SERVER_STATUS: null,
-  PING: null
+  PING: null,
+  MOTD_UPDATE: null
 });

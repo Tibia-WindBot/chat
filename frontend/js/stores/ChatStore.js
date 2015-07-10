@@ -52,7 +52,11 @@ function muteUser(username, nowarning) {
   }
 
   if (!nowarning) {
-    insertMessage('<p>You just muted \'' + username + '\' temporarily, this mute will last until your next visit to this chat. Typing <strong>/unmute  \'' + username + '\'</strong> will undo this action</p>');
+    insertMessage(
+      '<p>You just muted \'' + username + '\' temporarily, this mute will last until your next visit to this chat. Typing <strong>/unmute  \'' + username + '\'</strong> will undo this action</p>',
+      'Chat Help',
+      true
+    );
   }
 
   return ((messagesMuted > 0) || (!nowarning));
@@ -87,10 +91,11 @@ function unmuteUser(username) {
  */
 function userBannedReceived(data) {
   muteUser(data.username, true);
-  insertMessage(utils.buildMessage(
+  insertMessage(
     '<p>User \'' + data.username + '\' got banned by \'' + data.modname + '\'.</p>',
-    'Server'
-  ));
+    'Server',
+    true
+  );
 }
 
 /**
@@ -99,21 +104,20 @@ function userBannedReceived(data) {
  */
 function userUnbannedReceived(data) {
   unmuteUser(data.username, true);
-  insertMessage(utils.buildMessage(
+  insertMessage(
     '<p>User \'' + data.username + '\' got unbanned by \'' + data.modname + '\'.</p>',
-    'Server'
-  ));
+    'Server',
+    true
+  );
 }
 
  /**
   * Inserts a new message
-  * @param {object} msg The message to be inserted
+  * @param {object/string} msg The message to be inserted
   * @return {boolean} emitchange Whether it should emit the change event or not. It won't emit it when the message sender is muted
   */
-function insertMessage(msg) {
-  if (typeof(msg) === 'string') {
-    return insertMessage(utils.buildMessage(msg));
-  }
+function insertMessage(msg, sendername, isRaw, senderid, senderusergroup, time) {
+  msg = utils.buildMessage(msg, sendername, isRaw, senderid, senderusergroup, time);
 
   if (_mutedUsers.hasOwnProperty(msg.username.toLowerCase())) {
 		// Just tag it as 'dontshow', but still add it to the list,
@@ -132,7 +136,11 @@ function insertMessage(msg) {
  * @param {number} timems The time when the ping message was sent
  */
 function pongMessageReceived(timems) {
-  insertMessage('<div class="well well-sm">Ping: ' + ((new Date()).valueOf() - timems) + 'ms</div>');
+  insertMessage(
+    '<div class="well well-sm">Ping: ' + ((new Date()).valueOf() - timems) + 'ms</div>',
+    'Server',
+    true
+  );
 }
 
 /**
@@ -140,25 +148,54 @@ function pongMessageReceived(timems) {
  * @param {object} info An object containing the info sent by the server
  */
 function statusMessageReceived(info) {
-  var clientsCount = 0;
-  var clientsStr = '';
-  info.clients.forEach(function(client) {
-    if (clientsCount) { // Do not prepend a comma for the first connected client
-      clientsStr += ', ';
+  var buildClientsInfo = function(clients) {
+    var clientsCount = 0;
+    var ret = '';
+
+    clients.forEach(function(client) {
+      if (clientsCount) { // Do not prepend a comma for the first connected client
+        ret += ', ';
+      }
+
+      ret += '<a class="' + utils.getUserLinkClass(client.usergroupid) + '" href="https://forums.tibiawindbot.com/member.php?' + client.userid + '-' + client.username + '" target="_blank">' + client.username + '</a>';
+      clientsCount++;
+    });
+
+    return ret;
+  };
+
+  var msg = '<div class="well well-sm"><strong>Server Status</strong>';
+
+  // Doing it this way so we can choose what to send from the server.
+  for (var key in info) {
+    if (info.hasOwnProperty(key)) {
+      switch(key) {
+        case 'cpuLoad':
+          msg += '<br/><em>CPU Load:</em> ' + numeral(info.cpuLoad[0]).format('0.0[0]') + '% (last minute), ' + numeral(info.cpuLoad[1]).format('0.0[0]') + '% (last 5 minutes), ' + numeral(info.cpuLoad[1]).format('0.0[0]') + '% (last 15 minutes)';
+          break;
+        case 'mem':
+          msg += '<br/><em>Memory:</em> ' + numeral(info.mem[0]/1e9).format('0.0[0]') + 'GB/' + numeral(info.mem[1]/1e9).format('0.0[0]') + 'GB';
+          break;
+        case 'messagesCount':
+          msg += '<br/><em>Messages Transmitted: </em> ' + numeral(info.messagesCount).format('0,0');
+          break;
+        case 'serverUptime':
+          msg += '<br/><em>Server Uptime:</em> ' + utils.secondsToHHMMSS(info.serverUptime);
+          break;
+        case 'processUptime':
+          msg += '<br/><em>Process Uptime:</em> ' + utils.secondsToHHMMSS(info.processUptime);
+          break;
+        case 'clients':
+          msg += '<br/><em>Clients [' + numeral(info.clients.length).format('0,0') + ']:</em> ' + buildClientsInfo(info.clients);
+          break;
+      }
     }
+  }
+  msg += '</div>';
 
-    clientsStr += '<a class="' + utils.getUserLinkClass(client.usergroupid) + '" href="https://forums.tibiawindbot.com/member.php?' + client.userid + '-' + client.username + '" target="_blank">' + client.username + '</a>';
-    clientsCount++;
-  });
-
-  insertMessage('<div class="well well-sm"><strong>Server Status</strong>' +
-    '<br/><em>CPU Load:</em> ' + numeral(info.cpuLoad[0]).format('0.0[0]') + '% (last minute), ' + numeral(info.cpuLoad[1]).format('0.0[0]') + '% (last 5 minutes), ' + numeral(info.cpuLoad[1]).format('0.0[0]') + '% (last 15 minutes)' +
-    '<br/><em>Memory:</em> ' + numeral(info.mem[0]/1e9).format('0.0[0]') + 'GB/' + numeral(info.mem[1]/1e9).format('0.0[0]') + 'GB' +
-    '<br/><em>Messages Transmitted: </em> ' + numeral(info.messagesCount).format('0,0') +
-    '<br/><em>Server Uptime:</em> ' + utils.secondsToHHMMSS(info.serverUptime) +
-    '<br/><em>Process Uptime:</em> ' + utils.secondsToHHMMSS(info.processUptime) +
-    '<br/><em>Clients [' + numeral(clientsCount).format('0,0') + ']:</em> ' + clientsStr +
-    '</div>'
+  insertMessage(msg,
+    'Server',
+    true
   );
 }
 
@@ -247,7 +284,7 @@ AppDispatcher.register(function(action) {
       ChatStore.emitChange();
       break;
     case ChatConstants.MESSAGE_RECEIVED:
-      if (insertMessage(action.message)) {
+      if (insertMessage(msg)) {
         ChatStore.emitChange();
       }
       break;
@@ -293,6 +330,14 @@ AppDispatcher.register(function(action) {
       break;
     case ChatConstants.SEND_MESSAGE:
       ChatStore.emitSocketMessage('message', action.text);
+
+      // Insert the message to the UI immediately, so it will feel like the message was sent instantaneously
+      if (insertMessage(action.text, _selfInfo.username, false, _selfInfo.userid, _selfInfo.usergroupid, moment())) {
+        ChatStore.emitChange();
+      }
+      break;
+    case ChatConstants.MOTD_UPDATE:
+      ChatStore.emitSocketMessage('motd', action.text);
       break;
     case ChatConstants.SERVER_STATUS:
       ChatStore.emitSocketMessage('status');

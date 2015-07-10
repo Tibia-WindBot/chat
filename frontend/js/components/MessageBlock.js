@@ -8,12 +8,11 @@ var MessageBlock = React.createClass({
     render: function() {
         var url = (this.props.userid > 0 ? ('https://forums.tibiawindbot.com/member.php?' + this.props.userid + '-' + this.props.username) : "#");
         var imgurl = (this.props.userid > 0 ? ('https://forums.tibiawindbot.com/image.php?u=' + this.props.userid + '&dateline=' + startTime + '&type=thumb') : '/assets/images/logo.png');
-        var markdown = (this.props.userid > 0);
         var timeFormatted = this.props.time.format('LT');
 
         var messages = [];
         this.props.messages.forEach(function(msg, index) {
-            messages.push(<Message key={index} message={msg} isMarkdown={markdown}/>);
+            messages.push(<Message key={index} message={msg}/>);
         });
 
         return (

@@ -31,6 +31,9 @@ var ChatActions = {
       case '/kick':
         this.kickUser(cmd[1]);
         break;
+      case '/motd':
+        this.sendMotd(cmd[1]);
+        break;
       default: {  
         // Insert a message with all the available commands
         var self = ChatStore.getUserInfo();
@@ -58,20 +61,21 @@ var ChatActions = {
       return this.sendCommand(utils.splitArgs(text));
     }
 
-    var self = ChatStore.getUserInfo();
-
     AppDispatcher
     .dispatch({
       actionType: ChatConstants.SEND_MESSAGE,
       text: text
     });
+  },
 
-    // Insert the message to the UI immediately, so it will feel like the message was sent instantaneously
-    var msg = utils.buildMessage(text, self.username, self.userid, self.usergroupid);
+  /**
+   * @param {string} text The new motd message
+   */
+  sendMotd: function(text) {
     AppDispatcher
     .dispatch({
-      actionType: ChatConstants.MESSAGE_RECEIVED,
-      message: msg
+      actionType: ChatConstants.MOTD_UPDATE,
+      text: text
     });
   },
 

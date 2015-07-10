@@ -47,7 +47,7 @@ var MessageList = React.createClass({
 
                     // Push a day separator if last message was sent in a different day
                     if (lastDay.date() !== msg.time.date()) {
-                        renderList.push(<DaySeparator key={msg.time.date()} date={msg.time}/>);
+                        renderList.push(<DaySeparator key={msg.time.unix()} date={msg.time}/>);
                     }
 
                     lastSenderMessages = [];
@@ -55,7 +55,7 @@ var MessageList = React.createClass({
                 }
             } else {
                 // Push a day separator for the first message
-                renderList.push(<DaySeparator key={msg.time.date()} date={msg.time}/>);
+                renderList.push(<DaySeparator key={msg.time.unix()} date={msg.time}/>);
             }
 
             lastSenderTime = lastSenderTime || msg.time;

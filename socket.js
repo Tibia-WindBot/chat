@@ -4,6 +4,7 @@ var config = require('./config');
 var redis = require('./databases/chat-redis');
 var mysql = require('./databases/vb-mysql');
 var vbauth = require('./middlewares/vbauth-socket')(mysql, config.vbauth);
+var async = require('async');
 
 var maxMessagesToShow = 64;
 var messagesCount = 0;
@@ -43,9 +44,8 @@ function onUserConnect(socket) {
 
 	// get latest messages from redis store
 	redis.hmset('user:' + socket.vbuser.userid + ':socketids', socket.id, moment().unix());
-	//.hmset('socket:' + socket.id + ':userinfo', socket.vbuser);
 
-	fetchChatHistory(function(err, messages) {
+	async.parallel([fetchMotd, fetchChatHistory], function(err, results) {
 		if (err) {return console.log(err);}
 
 		var initialData = {
@@ -55,7 +55,7 @@ function onUserConnect(socket) {
 				usergroupid: socket.vbuser.usergroupid,
 				email: socket.vbuser.email,
 			},
-			messages: messages			
+			messages: results[1].concat(results[0])
 		};
 
 		socket.emit('welcome message', initialData);
@@ -99,6 +99,23 @@ function fetchChatHistory(callback) {
 	});
 }
 
+function fetchMotd(callback) {
+	redis.get('chat-motd:main', function(err, text) {
+		if (err) {return callback(err, null);}
+		if (!text) {return callback(null, []);}
+
+		var motd = [{
+			username: 'Server',
+			userid: 0,
+			usergroupid: 0,
+			time: moment(0).format(),
+			message: text
+		}];
+
+		callback(null, motd);
+	});
+}
+
 function deleteUserMessagesFromHistory(username, callback) {
 	username = username.toLowerCase();
 
@@ -125,7 +142,6 @@ function onUserDisconnect(socket) {
 	clientsCount--;
 
 	redis.hdel('user:' + socket.vbuser.userid + ':socketids', socket.id);
-	//redis.del('socket:' + socket.id + ':userinfo', socket.vbuser);
 }
 
 function onBanUser(socket, info) {
@@ -236,7 +252,7 @@ function onUnbanUser(socket, info) {
 		if (!result.length) {
 			return;
 		}
-		
+
 		var key = 'user:' + result[0].userid + ':ban';
 		redis.del(key, function(err, rows) {
 			if (err) {return console.log(err);}
@@ -278,6 +294,15 @@ function onPingReceived(socket, timems) {
 	}
 }
 
+function onMotdReceived(socket, text) {
+	if (socket.vbuser.usergroupid !== 6 || typeof text !== 'string') {
+		return;
+	}
+
+	text = text.slice(0, 255);
+	redis.set('chat-motd:main', text);
+}
+
 io.on('connection', function(socket) {
 	onUserConnect(socket);
 
@@ -299,6 +324,9 @@ io.on('connection', function(socket) {
 	})
 	.on('disconnect', function() {
 		onUserDisconnect(socket);
+	})
+	.on('motd', function(text) {
+		onMotdReceived(socket, text);
 	})
 	.on('ping', function(timems) {
 		onPingReceived(socket, timems);
