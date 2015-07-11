@@ -30,7 +30,10 @@ function verifyUserBan(socket, next) {
 }
 
 function verifyLoginPermission(socket, next) {
-	if (vbauth.isModerator(socket.vbuser) || vbauth.usergroupid === 12 || vbauth.usergroupid === 14) {
+	if (!socket.vbuser.userid) {
+		err = new Error('Not authenticated.');
+		return next(err);	
+	} else if (vbauth.isModerator(socket.vbuser) || vbauth.usergroupid === 12 || vbauth.usergroupid === 14) {
 		// moderators, windbot resellers and wind testers
 		next();
 	} else if (vbauth.usergroupid === 9 && socket.vbuser.posts >= minPostCount) {

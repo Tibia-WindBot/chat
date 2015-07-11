@@ -1,8 +1,6 @@
 var socket = require('socket.io-client')();
 var ChatActions = require('./actions/ChatActions');
 var ChatStore = require('./stores/ChatStore');
-var utils = require('./utils/ChatMessage');
-var marked = require('marked');
 
 function _onSend(messageType, data) {
 	socket.emit(messageType, data);
@@ -22,22 +20,22 @@ function onError(err) {
 		return;
 	}
 
+	console.log(err);
 	var text = '';
 	if (err.indexOf('Banned') === 0) {
-		text = '<p>You were banned from this chat.';
+		text = 'You were banned from this chat.';
 
 		var reason = err.slice(8);
 		if (reason.indexOf(':') > 0) {
-			text += ' Reason given by ' + marked(reason);
+			text += ' Reason given by ' + reason;
 		}
-		text += '</p>';
 	} else if (err.indexOf('Posts') === 0) {
-		text = '<p>You are not allowed to use this chat.</p>';
+		text = 'You are not allowed to use this chat.';
 	} else {
-		text = '<p>You must be logged in to use WindBot Chat. Follow <a href="https://forums.tibiawindbot.com/login.php?do=login">this link</a> to authenticate.</p>';
+		text = 'You must be logged in to use WindBot Chat. Follow [this link](https://forums.tibiawindbot.com/login.php?do=login) to authenticate.';
 	}
 
-	ChatActions.receiveMessage(text, 'Server', true);
+	ChatActions.receiveMessage(text);
 }
 
 var onReceive = {
