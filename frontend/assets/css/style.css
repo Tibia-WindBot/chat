@@ -130,23 +130,21 @@ a.user-wind-reseller:active, a.user-wind-reseller:hover {
 }
 
 .user-avatar {
+	border: 3px solid transparent;
+	height: 50px;
+	width: 50px;
+	overflow: hidden;
+
 	transition: background-color 300ms ease-in-out;
-	-webkit-transition: background-color 300ms ease-in-out;
-}
-.user-avatar img {
 	transition: border-color 300ms ease-in-out;
-	-webkit-transition: border-color 300ms ease-in-out;
 }
-.user-avatar:hover img {
+
+.user-avatar:hover {
 	border-color: #a0ce4e;
 }
 
 .user-avatar img {
-	border: 3px solid #F2F2F2;
-	max-width: 50px;
-	max-height: 50px;
-	width: 100%;
-	border-radius: 50%;
+	max-width: 100%;
 }
 
 .message {
@@ -162,7 +160,7 @@ a.user-wind-reseller:active, a.user-wind-reseller:hover {
 }
 
 /** SOLUTION: in custom CSS **/
-/* make sure navbar-form's input-group goes 100% i.e. full width of screen 
+/* make sure navbar-form's input-group goes 100% i.e. full width of screen
    to compliment the display: inline-table; that showed up in 3.2.0 */
 .navbar-form .input-group {
       width: 100%;
@@ -193,7 +191,7 @@ input[type="url"]:focus,
 input[type="search"]:focus,
 input[type="tel"]:focus,
 input[type="color"]:focus,
-.uneditable-input:focus {   
+.uneditable-input:focus {
 	border-color: rgba(111, 144, 36, 0.8);
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(111, 144, 36, 0.6);
 	outline: 0 none;
