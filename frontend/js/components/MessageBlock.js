@@ -17,7 +17,7 @@ var MessageBlock = React.createClass({
 
         return (
             <div className="row message-box">
-                <div className="col-sm-1 col-xs-2 user-avatar">
+                <div className="col-sm-1 col-xs-2">
                     <a target="_blank" href={url}>
                         <div className="img-circle user-avatar">
                             <img src={imgurl}></img>
