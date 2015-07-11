@@ -17,7 +17,7 @@ _selfInfo = {
   usergroupid: 1,
   email: '',
   isMod: function() {
-    return (this.usergroupid >= 6 && this.usergroupid <= 8);
+    return (this.usergroupid >= 5 && this.usergroupid <= 7);
   },
   isAdmin: function() {
     return (this.usergroupid === 6);
@@ -284,7 +284,7 @@ AppDispatcher.register(function(action) {
       ChatStore.emitChange();
       break;
     case ChatConstants.MESSAGE_RECEIVED:
-      if (insertMessage(msg)) {
+      if (insertMessage(action.message)) {
         ChatStore.emitChange();
       }
       break;

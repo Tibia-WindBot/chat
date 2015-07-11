@@ -502,7 +502,7 @@ module.exports = function(database, options) {
 	module.isModerator = function(userinfo) {
 		return (
 			// admins, moderators and super moderators
-			userinfo.usergroupid >= 6 && userinfo.usergroupid <= 8
+			userinfo.usergroupid >= 5 && userinfo.usergroupid <= 7
 		);
 	};
 
