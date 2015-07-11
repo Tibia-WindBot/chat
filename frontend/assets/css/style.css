@@ -138,6 +138,10 @@ a.user-wind-reseller:hover {
 	margin-bottom: 15px;
 }
 
+.navbar-brand img.img-responsive {
+	max-height: 40px !important;
+}
+
 .message-box:after {
   clear: both;
   content: ".";

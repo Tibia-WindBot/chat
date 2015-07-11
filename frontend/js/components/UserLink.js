@@ -29,12 +29,13 @@ var UserLink = React.createClass({
 
         var menu = [
             (<li key={'1-' + this.props.unixtime + this.props.userid}><a href={this.props.url} target="_blank"><i className="fa fa-user pull-right"></i>Show profile</a></li>),
-            (<li key={'2-' + this.props.unixtime + this.props.userid} onClick={this.handleMuteUser}><a href="#"><i className="fa fa-microphone-slash pull-right"></i>Mute user</a></li>)
+            (<li key={'2-' + this.props.unixtime + this.props.userid}><a href={'https://forums.tibiawindbot.com/private.php?do=newpm&u=' + this.props.userid} target="_blank"><i className="fa fa-envelope-o pull-right"></i>Send PM on Forums</a></li>),
+            (<li key={'3-' + this.props.unixtime + this.props.userid} onClick={this.handleMuteUser}><a href="#"><i className="fa fa-microphone-slash pull-right"></i>Mute user</a></li>)
         ];
         
         if (this.props.self.isMod()) {
-            menu.push(<li key={'3-' + this.props.unixtime + this.props.userid} role="separator" className="divider"></li>);
-            menu.push(<li key={'4-' + this.props.unixtime + this.props.userid} onClick={this.handleBanUser}><a href="#"><i className="fa fa-ban pull-right"></i>Ban user</a></li>);
+            menu.push(<li key={'4-' + this.props.unixtime + this.props.userid} role="separator" className="divider"></li>);
+            menu.push(<li key={'5-' + this.props.unixtime + this.props.userid} onClick={this.handleBanUser}><a href="#"><i className="fa fa-ban pull-right"></i>Ban user</a></li>);
         }
 
         return (
