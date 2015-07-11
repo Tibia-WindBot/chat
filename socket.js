@@ -33,10 +33,10 @@ function verifyLoginPermission(socket, next) {
 	if (!socket.vbuser.userid) {
 		err = new Error('Not authenticated.');
 		return next(err);	
-	} else if (vbauth.isModerator(socket.vbuser) || vbauth.usergroupid === 12 || vbauth.usergroupid === 14) {
+	} else if (vbauth.isModerator(socket.vbuser) || socket.vbuser.usergroupid === 12 || socket.vbuser.usergroupid === 14) {
 		// moderators, windbot resellers and wind testers
 		next();
-	} else if (vbauth.usergroupid === 9 && socket.vbuser.posts >= minPostCount) {
+	} else if (socket.vbuser.usergroupid === 9 && socket.vbuser.posts >= minPostCount) {
 		// wind powered with more than 300 posts
 		next();
 	} else {
