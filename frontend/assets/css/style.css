@@ -150,8 +150,10 @@ a.user-wind-reseller:hover {
 
 .user-avatar {
 	border: 3px solid transparent;
-	height: 50px;
-	width: 50px;
+	height: 100%;
+	width: 100%;
+	max-width: 50px;
+	max-height: 50px;
 	overflow: hidden;
 	margin: 0 auto;
 
