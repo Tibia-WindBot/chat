@@ -14,12 +14,17 @@ module.exports = {
 
       if (isRaw) {
         ret.message = msg;
+        ret.rawProcessed = true;
       } else {
         ret.message = marked(msg, {sanitize: true});
+        ret.rawProcessed = true;
       }
     } else {
       ret = msg;
-      ret.message = marked(ret.message.toString(), {sanitize: true});
+      if (!ret.rawProcessed) {
+        ret.message = marked(ret.message.toString(), {sanitize: true}); 
+        ret.rawProcessed = true;
+      }
     }
 
     return ret;

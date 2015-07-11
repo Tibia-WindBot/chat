@@ -44,11 +44,7 @@ var ChatActions = {
         }
         message += '</div>';
 
-        AppDispatcher
-        .dispatch({
-          actionType: ChatConstants.MESSAGE_RECEIVED,
-          message: message
-        });
+        this.receiveMessage(utils.buildMessage(message, 'Server', true));
       }
     }
   },
