@@ -153,6 +153,7 @@ a.user-wind-reseller:hover {
 	height: 50px;
 	width: 50px;
 	overflow: hidden;
+	margin: 0 auto;
 
 	transition: background-color 300ms ease-in-out;
 	transition: border-color 300ms ease-in-out;
