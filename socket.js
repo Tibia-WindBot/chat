@@ -7,12 +7,14 @@ var vbauth = require('./middlewares/vbauth-socket')(mysql, config.vbauth);
 var async = require('async');
 
 var maxMessagesToShow = 64;
+var minPostCount = 300;
+
 var messagesCount = 0;
 var clientsCount = 0;
 
-io.use(vbauth.mustBeUser);
+io.use(vbauth.session);
+io.use(verifyLoginPermission);
 io.use(verifyUserBan);
-io.use(verifyPostCount);
 
 function verifyUserBan(socket, next) {
 	redis.get('user:' + socket.vbuser.userid + ':ban', function(err, reason) {
@@ -27,15 +29,17 @@ function verifyUserBan(socket, next) {
 	});
 }
 
-function verifyPostCount(socket, next) {
-	var minPostCount = 300;
-
-	if (!vbauth.isModerator(socket.vbuser) && socket.vbuser.posts < minPostCount) {
+function verifyLoginPermission(socket, next) {
+	if (vbauth.isModerator(socket.vbuser) || vbauth.usergroupid === 12 || vbauth.usergroupid === 14) {
+		// moderators, windbot resellers and wind testers
+		next();
+	} else if (vbauth.usergroupid === 9 && socket.vbuser.posts >= minPostCount) {
+		// wind powered with more than 300 posts
+		next();
+	} else {
 		err = new Error('Posts. You are not allowed to use this chat.');
-		return next(err);
+		return next(err);	
 	}
-
-	return next();
 }
 
 function onUserConnect(socket) {
@@ -146,7 +150,7 @@ function onUserDisconnect(socket) {
 
 function onBanUser(socket, info) {
 	// only mods can ban!
-	if (!(socket.vbuser.usergroupid >= 6 && socket.vbuser.usergroupid <= 8)) {
+	if (!(socket.vbuser.usergroupid >= 5 && socket.vbuser.usergroupid <= 7)) {
 		return;
 	}
 
@@ -170,7 +174,7 @@ function onBanUser(socket, info) {
 		if (err) {return console.log(err);}
 
 		if (!result.length || 
-			(socket.vbuser.usergroupid !== 6 && result[0].usergroupid >= 6 && result[0].usergroupid <= 8)) {
+			(socket.vbuser.usergroupid !== 6 && result[0].usergroupid >= 5 && result[0].usergroupid <= 7)) {
 			// only admins can ban mods! :p
 			return;
 		}
@@ -197,7 +201,7 @@ function onBanUser(socket, info) {
 }
 
 function onKickUser(socket, info) {
-	if (!(socket.vbuser.usergroupid >= 6 && socket.vbuser.usergroupid <= 8)) {
+	if (!(socket.vbuser.usergroupid >= 5 && socket.vbuser.usergroupid <= 7)) {
 		// only mods can kick
 		return;
 	}
@@ -210,7 +214,7 @@ function onKickUser(socket, info) {
 		if (err) {return console.log(err);}
 
 		if (!result.length || 
-			(socket.vbuser.usergroupid !== 6 && result[0].usergroupid >= 6 && result[0].usergroupid <= 8)) {
+			(socket.vbuser.usergroupid !== 6 && result[0].usergroupid >= 5 && result[0].usergroupid <= 7)) {
 			// only admins can kick mods
 			return;
 		}
@@ -238,7 +242,7 @@ function kickUserById(userid) {
 
 function onUnbanUser(socket, info) {
 	// only mods can unban!
-	if (!(socket.vbuser.usergroupid >= 6 && socket.vbuser.usergroupid <= 8)) {
+	if (!(socket.vbuser.usergroupid >= 5 && socket.vbuser.usergroupid <= 7)) {
 		return;
 	}
 
@@ -289,7 +293,7 @@ function onRequestStatus(socket) {
 
 function onPingReceived(socket, timems) {
 	console.log('Ping: ' + timems);
-	if (socket.vbuser.usergroupid >= 6 && socket.vbuser.usergroupid <= 8) {
+	if (socket.vbuser.usergroupid >= 5 && socket.vbuser.usergroupid <= 7) {
 		socket.emit('pong', timems);
 	}
 }

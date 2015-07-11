@@ -58,6 +58,7 @@ module.exports = function (database, options) {
 			if (err) {
 				// We don't wanna expose exactly what went wrong, so lets just
 				// log it and throw a random error message to the user
+				console.log(err);
 
 				err = new Error('Whoops, something went wrong!');
 				err.status = 500;
