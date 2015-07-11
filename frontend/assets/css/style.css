@@ -3,6 +3,7 @@ body {
   padding-bottom: 70px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
+
 @media screen and ( max-height: 300px ){
 	body {
 		padding-top: 0px;
@@ -12,61 +13,79 @@ body {
 	}
 }
 
-a.user-link, a.user-link:visited, a.user-link:link {
+a.user-link,
+a.user-link:visited,
+a.user-link:link {
 	color: #6f9024;
 	text-decoration: none;
 }
 
-a.user-link:active, a.user-link:hover {
+a.user-link:active,
+a.user-link:hover {
 	color: #50671a;
 	text-decoration: none;
 	border-bottom: 1px dotted;
 }
 
-a.user-admin, a.user-admin:visited, a.user-admin:link {
+a.user-admin,
+a.user-admin:visited,
+a.user-admin:link {
 	color: #c73000;
 	font-weight: bold;
 }
 
-a.user-admin:active, a.user-admin:hover {
+a.user-admin:active,
+a.user-admin:hover {
 	color: #942400;
 	font-weight: bold
 }
 
-a.user-moderators, a.user-moderators:visited, a.user-moderators:link {
+a.user-moderators,
+a.user-moderators:visited,
+a.user-moderators:link {
 	color: #7c4ece;
 	font-weight: bold;
 }
 
-a.user-moderators:active, a.user-moderators:hover {
+a.user-moderators:active,
+a.user-moderators:hover {
 	color: #6233b6;
 	font-weight: bold
 }
 
-a.user-supermoderators, a.user-supermoderators:visited, a.user-supermoderators:link {
+a.user-supermoderators,
+a.user-supermoderators:visited,
+a.user-supermoderators:link {
 	color: #262626;
 	font-weight: bold;
 }
 
-a.user-supermoderators:active, a.user-supermoderators:hover {
+a.user-supermoderators:active,
+a.user-supermoderators:hover {
 	color: #000000;
 	font-weight: bold
 }
 
-a.user-wind-powered, a.user-wind-powered:visited, a.user-wind-powered:link {
+a.user-wind-powered,
+a.user-wind-powered:visited,
+a.user-wind-powered:link {
 	font-weight: bold;
 }
 
-a.user-wind-powered:active, a.user-wind-powered:hover {
+a.user-wind-powered:active,
+a.user-wind-powered:hover {
 	font-weight: bold
 }
 
-a.user-wind-reseller, a.user-wind-reseller:visited, a.user-wind-reseller:link {
+a.user-wind-reseller,
+a.user-wind-reseller:visited,
+a.user-wind-reseller:link {
 	color: #b6a433;
 	font-weight: bold;
 }
 
-a.user-wind-reseller:active, a.user-wind-reseller:hover {
+a.user-wind-reseller:active,
+a.user-wind-reseller:hover {
 	color: #8e8028;
 	font-weight: bold
 }
@@ -130,23 +149,21 @@ a.user-wind-reseller:active, a.user-wind-reseller:hover {
 }
 
 .user-avatar {
+	border: 3px solid transparent;
+	height: 50px;
+	width: 50px;
+	overflow: hidden;
+
 	transition: background-color 300ms ease-in-out;
-	-webkit-transition: background-color 300ms ease-in-out;
-}
-.user-avatar img {
 	transition: border-color 300ms ease-in-out;
-	-webkit-transition: border-color 300ms ease-in-out;
 }
-.user-avatar:hover img {
+
+.user-avatar:hover {
 	border-color: #a0ce4e;
 }
 
 .user-avatar img {
-	border: 3px solid #F2F2F2;
-	max-width: 50px;
-	max-height: 50px;
-	width: 100%;
-	border-radius: 50%;
+	max-width: 100%;
 }
 
 .message {
@@ -162,7 +179,7 @@ a.user-wind-reseller:active, a.user-wind-reseller:hover {
 }
 
 /** SOLUTION: in custom CSS **/
-/* make sure navbar-form's input-group goes 100% i.e. full width of screen 
+/* make sure navbar-form's input-group goes 100% i.e. full width of screen
    to compliment the display: inline-table; that showed up in 3.2.0 */
 .navbar-form .input-group {
       width: 100%;
@@ -193,7 +210,7 @@ input[type="url"]:focus,
 input[type="search"]:focus,
 input[type="tel"]:focus,
 input[type="color"]:focus,
-.uneditable-input:focus {   
+.uneditable-input:focus {
 	border-color: rgba(111, 144, 36, 0.8);
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(111, 144, 36, 0.6);
 	outline: 0 none;
