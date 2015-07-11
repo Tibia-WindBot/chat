@@ -3,6 +3,7 @@ body {
   padding-bottom: 70px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
+
 @media screen and ( max-height: 300px ){
 	body {
 		padding-top: 0px;
@@ -12,61 +13,79 @@ body {
 	}
 }
 
-a.user-link, a.user-link:visited, a.user-link:link {
+a.user-link,
+a.user-link:visited,
+a.user-link:link {
 	color: #6f9024;
 	text-decoration: none;
 }
 
-a.user-link:active, a.user-link:hover {
+a.user-link:active,
+a.user-link:hover {
 	color: #50671a;
 	text-decoration: none;
 	border-bottom: 1px dotted;
 }
 
-a.user-admin, a.user-admin:visited, a.user-admin:link {
+a.user-admin,
+a.user-admin:visited,
+a.user-admin:link {
 	color: #c73000;
 	font-weight: bold;
 }
 
-a.user-admin:active, a.user-admin:hover {
+a.user-admin:active,
+a.user-admin:hover {
 	color: #942400;
 	font-weight: bold
 }
 
-a.user-moderators, a.user-moderators:visited, a.user-moderators:link {
+a.user-moderators,
+a.user-moderators:visited,
+a.user-moderators:link {
 	color: #7c4ece;
 	font-weight: bold;
 }
 
-a.user-moderators:active, a.user-moderators:hover {
+a.user-moderators:active,
+a.user-moderators:hover {
 	color: #6233b6;
 	font-weight: bold
 }
 
-a.user-supermoderators, a.user-supermoderators:visited, a.user-supermoderators:link {
+a.user-supermoderators,
+a.user-supermoderators:visited,
+a.user-supermoderators:link {
 	color: #262626;
 	font-weight: bold;
 }
 
-a.user-supermoderators:active, a.user-supermoderators:hover {
+a.user-supermoderators:active,
+a.user-supermoderators:hover {
 	color: #000000;
 	font-weight: bold
 }
 
-a.user-wind-powered, a.user-wind-powered:visited, a.user-wind-powered:link {
+a.user-wind-powered,
+a.user-wind-powered:visited,
+a.user-wind-powered:link {
 	font-weight: bold;
 }
 
-a.user-wind-powered:active, a.user-wind-powered:hover {
+a.user-wind-powered:active,
+a.user-wind-powered:hover {
 	font-weight: bold
 }
 
-a.user-wind-reseller, a.user-wind-reseller:visited, a.user-wind-reseller:link {
+a.user-wind-reseller,
+a.user-wind-reseller:visited,
+a.user-wind-reseller:link {
 	color: #b6a433;
 	font-weight: bold;
 }
 
-a.user-wind-reseller:active, a.user-wind-reseller:hover {
+a.user-wind-reseller:active,
+a.user-wind-reseller:hover {
 	color: #8e8028;
 	font-weight: bold
 }
