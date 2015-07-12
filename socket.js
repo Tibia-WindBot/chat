@@ -273,7 +273,7 @@ function onUnbanUser(socket, info) {
 function onRequestStatus(socket) {
 	var os = require('os');
 
-	if (socket.vbuser.usergroupid === 6) {
+	if (socket.vbuser.usergroupid >= 5 && socket.vbuser.usergroupid <= 7) {
 		var info = {
 			cpuLoad: os.loadavg(),
 			mem: [os.freemem(), os.totalmem()],
@@ -295,7 +295,6 @@ function onRequestStatus(socket) {
 }
 
 function onPingReceived(socket, timems) {
-	console.log('Ping: ' + timems);
 	if (socket.vbuser.usergroupid >= 5 && socket.vbuser.usergroupid <= 7) {
 		socket.emit('pong', timems);
 	}
