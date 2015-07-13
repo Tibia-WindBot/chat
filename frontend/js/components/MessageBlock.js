@@ -10,7 +10,7 @@ var MessageBlock = React.createClass({
         var imgurl = (this.props.userid > 0 ? ('https://forums.tibiawindbot.com/image.php?u=' + this.props.userid + '&dateline=' + startTime + '&type=thumb') : '/assets/images/logo.png');
         var timeFormatted = this.props.time.format('LT');
         var userAvatarSyle = {
-            backgroundImage: imgurl
+            backgroundImage: 'url(' + imgurl + ')'
         };
 
         var messages = [];
