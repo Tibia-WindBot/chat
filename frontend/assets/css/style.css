@@ -152,7 +152,7 @@ a.user-wind-reseller:hover {
 
 	background-repeat: no-repeat;
     background-position: center;
-    background-size: contain;
+    background-size: cover;
 
 	transition: background-color 300ms ease-in-out;
 	transition: border-color 300ms ease-in-out;
