@@ -144,13 +144,15 @@ a.user-wind-reseller:hover {
 }
 
 .user-avatar {
-	border: 3px solid transparent;
-	height: 100%;
-	width: 100%;
-	max-width: 50px;
-	max-height: 50px;
+	border: 3px solid #FFF;
+	width: 50px;
+	height: 50px;
 	overflow: hidden;
 	margin: 0 auto;
+
+	background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
 
 	transition: background-color 300ms ease-in-out;
 	transition: border-color 300ms ease-in-out;
@@ -237,8 +239,8 @@ input[type="color"]:focus,
 		margin-bottom: 10px;
 	}
 	.user-avatar {
-		max-width: 36px;
-		max-height: 36px;
+		width: 36px;
+		height: 36px;
 	}
 	.message abbr {
 		font-size: 9px;

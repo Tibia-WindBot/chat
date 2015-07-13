@@ -9,6 +9,9 @@ var MessageBlock = React.createClass({
         var url = (this.props.userid > 0 ? ('https://forums.tibiawindbot.com/member.php?' + this.props.userid + '-' + this.props.username) : "#");
         var imgurl = (this.props.userid > 0 ? ('https://forums.tibiawindbot.com/image.php?u=' + this.props.userid + '&dateline=' + startTime + '&type=thumb') : '/assets/images/logo.png');
         var timeFormatted = this.props.time.format('LT');
+        var userAvatarSyle = {
+            backgroundImage: imgurl
+        };
 
         var messages = [];
         this.props.messages.forEach(function(msg, index) {
@@ -19,9 +22,7 @@ var MessageBlock = React.createClass({
             <div className="row message-box">
                 <div className="col-sm-1 col-xs-2">
                     <a target="_blank" href={url}>
-                        <div className="img-circle user-avatar">
-                            <img src={imgurl}></img>
-                        </div>
+                        <div className="img-circle user-avatar" style={userAvatarSyle}></div>
                     </a>
                 </div>
 
