@@ -9,6 +9,9 @@ var MessageBlock = React.createClass({
         var url = (this.props.userid > 0 ? ('https://forums.tibiawindbot.com/member.php?' + this.props.userid + '-' + this.props.username) : "#");
         var imgurl = (this.props.userid > 0 ? ('https://forums.tibiawindbot.com/image.php?u=' + this.props.userid + '&dateline=' + startTime + '&type=thumb') : '/assets/images/logo.png');
         var timeFormatted = this.props.time.format('LT');
+        var userAvatarSyle = {
+            backgroundImage: 'url(' + imgurl + ')'
+        };
 
         var messages = [];
         this.props.messages.forEach(function(msg, index) {
@@ -17,15 +20,13 @@ var MessageBlock = React.createClass({
 
         return (
             <div className="row message-box">
-                <div className="col-sm-1 col-xs-2">
+                <div className="user-avatar">
                     <a target="_blank" href={url}>
-                        <div className="img-circle user-avatar">
-                            <img src={imgurl}></img>
-                        </div>
+                        <div className="img-circle" style={userAvatarSyle}></div>
                     </a>
                 </div>
 
-                <div className="col-sm-11 col-xs-10 message">
+                <div className="message">
                     <abbr className="pull-right">{timeFormatted}</abbr>
                     <UserLink username={this.props.username} unixtime={this.props.time.unix()} userid={this.props.userid} usergroupid={this.props.usergroupid} url={url} self={this.props.self} handleMuteUser={this.props.handleMuteUser} handleBanUser={this.props.handleBanUser}/>
                     {messages}

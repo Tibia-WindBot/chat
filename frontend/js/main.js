@@ -14,3 +14,7 @@ moment.locale('en', {
 });
 
 React.render(<MessageContainer/>, document.getElementById('chat-container'));
+
+if (window.self != window.top) {
+	document.body.classList.add('iframe');
+}
