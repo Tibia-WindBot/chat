@@ -1,5 +1,43 @@
 var moment = require('moment');
 var marked = require('marked');
+var highlight = require('highlight.js');
+
+var renderer = new marked.Renderer();
+renderer.link = function(href, title, text) {
+  if (this.options.sanitize) {
+    try {
+      var prot = decodeURIComponent(unescape(href))
+        .replace(/[^\w:]/g, '')
+        .toLowerCase();
+    } catch (e) {
+      return '';
+    }
+    if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0) {
+      return '';
+    }
+  }
+  var out = '<a href="' + href + '"';
+  if (title) {
+    out += ' title="' + title + '"';
+  }
+  out += ' target="_blank">' + text + '</a>';
+  return out;
+};
+
+marked.setOptions({
+  renderer: renderer,
+  gfm: true,
+  tables: false,
+  breaks: false,
+  pedantic: false,
+  sanitize: true,
+  smartLists: true,
+  smartypants: true,
+  highlight: function (code, lang) {
+    console.log(code, lang);
+    return highlight.highlight(lang || 'lua', code).value;
+  }
+});
 
 module.exports = {
   buildMessage: function(msg, sendername, isRaw, senderid, senderusergroup, time) {

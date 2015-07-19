@@ -14,13 +14,7 @@ var MessageForm = React.createClass({
 
         var loggedOut = this.props.self.userid === 0;
 
-        return (
-            <nav className="navbar navbar-default navbar-fixed-bottom">
-                  <div className="container">
-                      <div className="row">
-                        <form onSubmit={this._onFormSubmit} className="navbar-form" role="chat">
-                            <div className="input-group">
-                                <input 
+                                /*<input 
                                     type="text"
                                     maxLength="255"
                                     className="form-control"
@@ -29,7 +23,25 @@ var MessageForm = React.createClass({
                                     autoFocus={true}
                                     onChange={this._onChange}
                                     disabled={loggedOut}
-                                />
+                                />*/
+
+        return (
+            <nav className="navbar navbar-default navbar-fixed-bottom">
+                  <div className="container">
+                      <div className="row">
+                        <form onSubmit={this._onFormSubmit} className="navbar-form" role="chat">
+                            <div className="input-group">
+                                <textarea
+                                    className="form-control"
+                                    maxLength="255"
+                                    placeholder="Send a message..."
+                                    value={this.state.text}
+                                    autoFocus={true}
+                                    onChange={this._onChange}
+                                    onKeyDown={this._onKeyDown}
+                                    disabled={loggedOut}
+                                    rows="1">
+                                </textarea>
                                 <span className="input-group-btn">
                                     <button className="btn btn-default" type="submit" disabled={loggedOut}>Send</button>
                                 </span>
@@ -55,6 +67,11 @@ var MessageForm = React.createClass({
         this.setState({
             text: event.target.value
         });
+    },
+    _onKeyDown: function(event) {
+        if (event.keyCode === 13 && !event.shiftKey) {
+            return this._onFormSubmit(event);
+        }
     }
 });
 
