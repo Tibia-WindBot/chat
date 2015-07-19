@@ -20,13 +20,13 @@ var MessageBlock = React.createClass({
 
         return (
             <div className="row message-box">
-                <div className="col-sm-1 col-xs-2">
+                <div className="user-avatar">
                     <a target="_blank" href={url}>
-                        <div className="img-circle user-avatar" style={userAvatarSyle}></div>
+                        <div className="img-circle" style={userAvatarSyle}></div>
                     </a>
                 </div>
 
-                <div className="col-sm-11 col-xs-10 message">
+                <div className="message">
                     <abbr className="pull-right">{timeFormatted}</abbr>
                     <UserLink username={this.props.username} unixtime={this.props.time.unix()} userid={this.props.userid} usergroupid={this.props.usergroupid} url={url} self={this.props.self} handleMuteUser={this.props.handleMuteUser} handleBanUser={this.props.handleBanUser}/>
                     {messages}
