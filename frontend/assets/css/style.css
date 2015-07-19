@@ -224,29 +224,30 @@ input[type="color"]:focus,
     z-index: 9999;
 }
 
-@media screen and ( max-height: 300px ){
-	body {
-		padding-top: 0px;
-		font-size: 12px;
-	}
-	.navbar-fixed-top {
-		display: none;
-	}
-	p {
-		font-size: 12px;
-		margin: 0px 0px 3px;
-	}
-	h5 {
-		font-size: 12px;
-	}
-	.message-box {
-		margin-bottom: 10px;
-	}
-	.user-avatar {
-		width: 36px;
-		height: 36px;
-	}
-	.message abbr {
-		font-size: 9px;
-	}
+/* Styles for forums iframe. The iframe class is added through JS */
+body.iframe {
+	padding-top: 0px;
+}
+
+body.iframe,
+body.iframe h5,
+body.iframe p {
+	font-size: 12px;
+}
+
+body.iframe .message abbr {
+	font-size: 9px;
+}
+
+/* Hide navbar on iframe */
+body.iframe .navbar-fixed-top {
+	display: none;
+}
+
+body.iframe p {
+	margin: 0 0 3px;
+}
+
+body.iframe .message-box {
+	margin-bottom: 10px;
 }
