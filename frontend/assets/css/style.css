@@ -131,8 +131,8 @@ a.user-wind-reseller:hover {
 }
 
 .message-box {
-	-webkit-display: flex;
-	-ms-display: flex;
+	display: -webkit-flex;
+	display: -ms-flex;
 	display: flex;
 	word-wrap: break-word;
 	margin-bottom: 15px;
@@ -176,9 +176,9 @@ a.user-wind-reseller:hover {
 }
 
 .message {
-	-webkit-flex-grow: 1;
-	-ms-flex-grow: 1;
-	flex-grow: 1;
+	-webkit-flex: 1 0;
+	-ms-flex: 1 0;
+	flex: 1 0;
 	padding-left: 0px;
 }
 
