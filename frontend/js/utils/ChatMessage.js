@@ -5,8 +5,9 @@ var highlight = require('highlight.js');
 var renderer = new marked.Renderer();
 renderer.link = function(href, title, text) {
   if (this.options.sanitize) {
+    var pro;
     try {
-      var prot = decodeURIComponent(unescape(href))
+      prot = decodeURIComponent(unescape(href))
         .replace(/[^\w:]/g, '')
         .toLowerCase();
     } catch (e) {
@@ -24,6 +25,19 @@ renderer.link = function(href, title, text) {
   return out;
 };
 
+renderer.heading = function(text, level, raw) {
+  return '<p>' + text + '</p>';
+};
+
+renderer.image = function(href, title, text) {
+  var out = '<a href="' + href + '" target="_blank"><img src="' + href + '" alt="' + text + '" class="img-thumbnail chat-image"';
+  if (title) {
+    out += ' title="' + title + '"';
+  }
+  out += (this.options.xhtml ? '/>' : '>') + '</a>';
+  return out;
+};
+
 marked.setOptions({
   renderer: renderer,
   gfm: true,
@@ -34,7 +48,6 @@ marked.setOptions({
   smartLists: true,
   smartypants: true,
   highlight: function (code, lang) {
-    console.log(code, lang);
     return highlight.highlight(lang || 'lua', code).value;
   }
 });

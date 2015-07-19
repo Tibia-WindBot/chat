@@ -7,7 +7,7 @@ var vbauth = require('./middlewares/vbauth-socket')(mysql, config.vbauth);
 var async = require('async');
 
 var maxMessagesToShow = 64;
-var minPostCount = 300;
+var minPostCount = 150;
 
 var messagesCount = 0;
 var clientsCount = 0;

@@ -85,6 +85,10 @@ a.user-wind-reseller:hover {
 	font-weight: bold
 }
 
+.chat-image {
+	max-width: 128px;
+}
+
 .navbar-brand {
 	padding-top: 5px;
 	padding-bottom: 5px;
@@ -221,7 +225,7 @@ body.iframe {
 
 body.iframe,
 body.iframe h5,
-body.iframe p {
+body.iframe p, body.iframe blockquote {
 	font-size: 12px;
 }
 
@@ -240,4 +244,8 @@ body.iframe p {
 
 body.iframe .message-box {
 	margin-bottom: 10px;
+}
+
+body.iframe .chat-image {
+	max-width: 64px;
 }

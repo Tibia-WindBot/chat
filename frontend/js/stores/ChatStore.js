@@ -285,6 +285,7 @@ AppDispatcher.register(function(action) {
       break;
     case ChatConstants.MESSAGE_RECEIVED:
       if (insertMessage(action.message)) {
+        document.getElementById('message_audio').play();
         ChatStore.emitChange();
       }
       break;

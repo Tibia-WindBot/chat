@@ -9,7 +9,7 @@ var MessageBlock = React.createClass({
         var url = (this.props.userid > 0 ? ('https://forums.tibiawindbot.com/member.php?' + this.props.userid + '-' + this.props.username) : "#");
         var imgurl = (this.props.userid > 0 ? ('https://forums.tibiawindbot.com/image.php?u=' + this.props.userid + '&dateline=' + startTime + '&type=thumb') : '/assets/images/logo.png');
         var timeFormatted = this.props.time.format('LT');
-        var userAvatarSyle = {
+        var userAvatarStyle = {
             backgroundImage: 'url(' + imgurl + ')'
         };
 
@@ -22,7 +22,7 @@ var MessageBlock = React.createClass({
             <div className="row message-box">
                 <div className="user-avatar">
                     <a target="_blank" href={url}>
-                        <div className="img-circle" style={userAvatarSyle}></div>
+                        <div className="img-circle" style={userAvatarStyle}></div>
                     </a>
                 </div>
 
