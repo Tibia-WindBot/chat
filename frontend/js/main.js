@@ -1,6 +1,7 @@
 var MessageContainer = require('./components/MessageContainer');
 var React = require('react');
 var moment = require('moment');
+var Notify = require('notifyjs');
 
 moment.locale('en', {
     calendar : {
@@ -13,8 +14,11 @@ moment.locale('en', {
     }
 });
 
-React.render(<MessageContainer/>, document.getElementById('chat-container'));
+React.render(<MessageContainer/>, document.getElementById('chat-container'), function () {
+	if (window.self != window.top) {
+		document.body.classList.add('iframe');
+	}
 
-if (window.self != window.top) {
-	document.body.classList.add('iframe');
-}
+	Notify.requestPermission();
+});
+

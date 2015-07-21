@@ -43,7 +43,7 @@ renderer.image = function(href, title, text) {
       return '';
     }
   }
-  
+
   var out = '<a href="' + href + '" target="_blank"><img src="' + href + '" alt="' + text + '" class="img-thumbnail chat-image"';
   if (title) {
     out += ' title="' + title + '"';
@@ -75,6 +75,7 @@ module.exports = {
         username: sendername || 'Chat Help',
         usergroupid: senderusergroup || 0,
         time: time || moment(),
+        rawMessage: msg
       };
 
       if (isRaw) {
@@ -87,7 +88,7 @@ module.exports = {
     } else {
       ret = msg;
       if (!ret.rawProcessed) {
-        ret.message = marked(ret.message.toString(), {sanitize: true}); 
+        ret.message = marked(ret.message.toString(), {sanitize: true});
         ret.rawProcessed = true;
       }
     }
@@ -98,7 +99,7 @@ module.exports = {
   /**
    * Splits the arguments in the format: '/command param1 "par am2"' into: ['/command', 'param1', 'par am2', ...]
    * Credits: https://github.com/elgs/splitargs/blob/master/splitargs.js
-   * 
+   *
    * @param {string} input Text to be parsed in to an array
    * @return {array} strArray An array containing all the parameters split
    */
@@ -108,7 +109,7 @@ module.exports = {
     var doubleQuoteOpen = false;
     var tokenBuffer = [];
     var ret = [];
-    
+
     var arr = input.split('');
     for (var i = 0; i < arr.length; ++i) {
         var element = arr[i];
@@ -124,7 +125,7 @@ module.exports = {
                 continue;
             }
         }
-        
+
         if (!singleQuoteOpen && !doubleQuoteOpen) {
             if (matches) {
                 if (tokenBuffer && tokenBuffer.length > 0) {

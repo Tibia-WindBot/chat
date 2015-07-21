@@ -5,9 +5,12 @@ var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 var moment = require('moment');
 var numeral = require('numeral');
+var Notify = require('notifyjs');
 
 var CHANGE_EVENT = 'change';
 var SOCKET_EVENT = 'socket';
+
+var startTime = Math.floor(new Date().valueOf()/1000);
 
 _messages = [];
 _mutedUsers = {};
@@ -67,7 +70,7 @@ function muteUser(username, nowarning) {
  * @param {string} username The name of the user we want to unmute
  * @return {boolean} emitchange Whether it should emit the change event or not. It won't emit it when there's no message from username on the messages list
  */
-function unmuteUser(username) {  
+function unmuteUser(username) {
  	username = username.toLowerCase();
 
  	var messagesUnmuted = 0;
@@ -129,6 +132,26 @@ function insertMessage(msg, sendername, isRaw, senderid, senderusergroup, time) 
 	_messages.push(msg);
 
 	return (msg.dontshow !== true);
+}
+
+/**
+ * Plays a sound and displays a notification with the message content.
+ * @param {object} msg The message to be inserted
+ */
+function notifyMessage(msg) {
+  msg = utils.buildMessage(msg);
+
+  document.getElementById('message_audio').play();
+
+  var div = document.createElement('div');
+  div.innerHTML = msg.message;
+  notification = new Notify(msg.username, {
+    icon: (msg.userid > 0 ? ('https://forums.tibiawindbot.com/image.php?u=' + msg.userid + '&dateline=' + startTime + '&type=thumb') : '/assets/images/logo.png'),
+    body: div.innerText,
+    timeout: 5
+  });
+
+  notification.show();
 }
 
 /**
@@ -285,7 +308,7 @@ AppDispatcher.register(function(action) {
       break;
     case ChatConstants.MESSAGE_RECEIVED:
       if (insertMessage(action.message)) {
-        document.getElementById('message_audio').play();
+        notifyMessage(action.message);
         ChatStore.emitChange();
       }
       break;
@@ -324,7 +347,7 @@ AppDispatcher.register(function(action) {
         duration: action.duration || 86400
       });
       break;
-    case ChatConstants.UNBAN_USER: 
+    case ChatConstants.UNBAN_USER:
       ChatStore.emitSocketMessage('unban', {
         username: action.username
       });
