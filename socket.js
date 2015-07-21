@@ -36,7 +36,7 @@ function verifyLoginPermission(socket, next) {
 	} else if (vbauth.isModerator(socket.vbuser) || socket.vbuser.usergroupid === 12 || socket.vbuser.usergroupid === 14) {
 		// moderators, windbot resellers and wind testers
 		next();
-	} else if (/*socket.vbuser.usergroupid === 9 && */socket.vbuser.posts >= minPostCount) {
+	} else if ((socket.vbuser.usergroupid === 9 || socket.vbuser.usergroupid === 2) && socket.vbuser.posts >= minPostCount) {
 		// wind powered with more than 'minPostCount' posts
 		next();
 	} else {

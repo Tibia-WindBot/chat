@@ -104,6 +104,19 @@ module.exports = {
   },
 
   /**
+   * Converts a string to true/false. Used in /notification and /sound.
+   * @param {string} to be checked
+   */
+  textToBool: function(text) {
+    text = text.toString().toLowerCase();
+    if (text === 'true' || text === 'on' || text === 'yes') {
+      return true;
+    }
+
+    return false;
+  },
+
+  /**
    * Splits the arguments in the format: '/command param1 "par am2"' into: ['/command', 'param1', 'par am2', ...]
    * Credits: https://github.com/elgs/splitargs/blob/master/splitargs.js
    *

@@ -25,10 +25,10 @@ _selfInfo = {
     return (this.usergroupid === 6);
   }
 };
-_settings = {
+_settings = assign({
   playSound: true,
   displayNotification: true
-};
+}, (typeof(Storage) === 'function' ? JSON.parse(localStorage.getItem('settings')) : {}));
 
 /**
  * Updates the user info
@@ -44,6 +44,7 @@ function updateSelf(info) {
  */
 function updateSettings(newSettings) {
   _settings = assign({}, _settings, newSettings);
+  localStorage.setItem('settings', JSON.stringify(_settings));
 }
 
 /**
@@ -160,6 +161,7 @@ function notifyMessage(msg) {
     notification = new Notify(msg.username, {
       icon: (msg.userid > 0 ? ('https://forums.tibiawindbot.com/image.php?u=' + msg.userid + '&dateline=' + startTime + '&type=thumb') : '/assets/images/logo.png'),
       body: div.innerText,
+      tag: ChatConstants.MESSAGE_RECEIVED,
       timeout: 5
     });
   
