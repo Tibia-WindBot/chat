@@ -62,7 +62,14 @@ marked.setOptions({
   smartLists: true,
   smartypants: true,
   highlight: function (code, lang) {
-    return highlight.highlight(lang || 'lua', code).value;
+    var ret = '';
+    try {
+      ret = highlight.highlight(lang || 'lua', code).value;
+    } catch(err) {
+      ret = highlight.highlightAuto(code).value;
+    } finally {
+      return ret;
+    }
   }
 });
 

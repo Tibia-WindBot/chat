@@ -1,10 +1,13 @@
 var keymirror = require('keymirror');
 
 module.exports = keymirror({
+  /* Client settings */
+  UPDATE_SETTINGS: null,
+
   /* Serverside messages */
-	INITIALMESSAGE_RECEIVED: null,
-	SOCKET_DISCONNECTED: null,
-	MESSAGE_RECEIVED: null,
+  INITIALMESSAGE_RECEIVED: null,
+  SOCKET_DISCONNECTED: null,
+  MESSAGE_RECEIVED: null,
   MUTE_USER: null,
   UNMUTE_USER: null,
   BAN_USER_SUCCESS: null,

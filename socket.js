@@ -7,7 +7,7 @@ var vbauth = require('./middlewares/vbauth-socket')(mysql, config.vbauth);
 var async = require('async');
 
 var maxMessagesToShow = 64;
-var minPostCount = 150;
+var minPostCount = 100;
 
 var messagesCount = 0;
 var clientsCount = 0;
@@ -36,8 +36,8 @@ function verifyLoginPermission(socket, next) {
 	} else if (vbauth.isModerator(socket.vbuser) || socket.vbuser.usergroupid === 12 || socket.vbuser.usergroupid === 14) {
 		// moderators, windbot resellers and wind testers
 		next();
-	} else if (socket.vbuser.usergroupid === 9 && socket.vbuser.posts >= minPostCount) {
-		// wind powered with more than 300 posts
+	} else if (/*socket.vbuser.usergroupid === 9 && */socket.vbuser.posts >= minPostCount) {
+		// wind powered with more than 'minPostCount' posts
 		next();
 	} else {
 		err = new Error('Posts. You are not allowed to use this chat.');

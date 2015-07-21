@@ -6,11 +6,10 @@ var assign = require('object-assign');
 var moment = require('moment');
 var numeral = require('numeral');
 var Notify = require('notifyjs');
+var startTime = require('../globals').startTime;
 
 var CHANGE_EVENT = 'change';
 var SOCKET_EVENT = 'socket';
-
-var startTime = Math.floor(new Date().valueOf()/1000);
 
 _messages = [];
 _mutedUsers = {};
@@ -26,6 +25,10 @@ _selfInfo = {
     return (this.usergroupid === 6);
   }
 };
+_settings = {
+  playSound: true,
+  displayNotification: true
+};
 
 /**
  * Updates the user info
@@ -33,6 +36,14 @@ _selfInfo = {
  */
 function updateSelf(info) {
   _selfInfo = assign({}, _selfInfo, info);
+}
+
+/**
+ * Updates the settings
+ * @param {object} newSettings An object containing only the settings that will get updated
+ */
+function updateSettings(newSettings) {
+  _settings = assign({}, _settings, newSettings);
 }
 
 /**
@@ -139,19 +150,21 @@ function insertMessage(msg, sendername, isRaw, senderid, senderusergroup, time) 
  * @param {object} msg The message to be inserted
  */
 function notifyMessage(msg) {
-  msg = utils.buildMessage(msg);
+  if (_settings.playSound) {
+    document.getElementById('message_audio').play();
+  }
 
-  document.getElementById('message_audio').play();
-
-  var div = document.createElement('div');
-  div.innerHTML = msg.message;
-  notification = new Notify(msg.username, {
-    icon: (msg.userid > 0 ? ('https://forums.tibiawindbot.com/image.php?u=' + msg.userid + '&dateline=' + startTime + '&type=thumb') : '/assets/images/logo.png'),
-    body: div.innerText,
-    timeout: 5
-  });
-
-  notification.show();
+  if (_settings.displayNotification) {
+    var div = document.createElement('div');
+    div.innerHTML = msg.message;
+    notification = new Notify(msg.username, {
+      icon: (msg.userid > 0 ? ('https://forums.tibiawindbot.com/image.php?u=' + msg.userid + '&dateline=' + startTime + '&type=thumb') : '/assets/images/logo.png'),
+      body: div.innerText,
+      timeout: 5
+    });
+  
+    notification.show();
+  }
 }
 
 /**
@@ -255,9 +268,20 @@ var ChatStore = assign({}, EventEmitter.prototype, {
     return _selfInfo;
   },
 
-  emitChange: function() {
-    this.emit(CHANGE_EVENT);
+  /**
+   * Gets the current chat settings
+   * @return {object} userinfo An object containing chat settings
+   */
+  getSettings: function() {
+    return _settings;
   },
+
+  /**
+   * Emits a CHANGE_EVENT to the AppDispatcher, telling him to refresh the view
+   */
+   emitChange: function() {
+     this.emit(CHANGE_EVENT);
+   },
 
 	/**
 	 * @param {function} callback
@@ -301,6 +325,9 @@ AppDispatcher.register(function(action) {
         });
 
         ChatStore.emitChange();
+      break;
+    case ChatConstants.UPDATE_SETTINGS:
+      updateSettings(action.settings);
       break;
     case ChatConstants.SOCKET_DISCONNECTED:
       clear();

@@ -40,7 +40,7 @@ var ChatActions = {
 
         var message = '<div class="well well-sm">Available commands:<br/>/help <small><em>- displays a list with all available commands</em></small><br/>/mute \'user name\' <small><em>- mutes the user \'user name\' temporarily, meaning you will no longer see his messages. The mute will last until you reopen WindBot Chat</em></small><br/>/unmute \'user name\' <small><em>- removes the mute from user \'user name\'</em></small>';
         if (self.isMod()) {
-          message += '<br/>/ban \'user name\' \'reason\' 600 <small><em>- bans the user \'user name\' from the chat for 600 seconds. Default reason is none, and default time is 86400 seconds (24h)</em></small><br/>/unban \'user name\' <small><em>- removes the ban from user \'user name\'</em></small><br/>/kick \'user name\' <small><em>- kicks the user \'user name\' from the server</em></small><br/>/ping <small><em>- returns the latency in milliseconds</em></small>';
+          message += '<br/>/ban \'user name\' \'reason\' 600 <small><em>- bans the user \'user name\' from the chat for 600 seconds. Default reason is none, and default time is 86400 seconds (24h)</em></small><br/>/unban \'user name\' <small><em>- removes the ban from user \'user name\'</em></small><br/>/kick \'user name\' <small><em>- kicks the user \'user name\' from the server</em></small><br/>/ping <small><em>- returns the latency in milliseconds</em></small><br/>/status <small><em>- returns information about users online and server status</em></small>';
         }
         message += '</div>';
 
@@ -61,6 +61,17 @@ var ChatActions = {
     .dispatch({
       actionType: ChatConstants.SEND_MESSAGE,
       text: text
+    });
+  },
+
+  /**
+   * @param {object} settings The new settings
+   */
+  setSettings: function(settings) {
+    AppDispatcher
+    .dispatch({
+      actionType: ChatConstants.UPDATE_SETTINGS,
+      settings: settings
     });
   },
 
@@ -171,6 +182,9 @@ var ChatActions = {
     });
   },
 
+  /**
+   * Asks the server for the server status
+   */
   getServerStatus: function() {
     AppDispatcher.dispatch({
       actionType: ChatConstants.SERVER_STATUS

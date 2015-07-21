@@ -2,7 +2,7 @@ var React = require('react');
 var Message = require('./Message');
 var UserLink = require('./UserLink');
 
-var startTime = Math.floor(new Date().valueOf()/1000);
+var startTime = require('../globals').startTime;
 
 var MessageBlock = React.createClass({
     render: function() {
