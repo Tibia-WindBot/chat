@@ -1,5 +1,5 @@
 #WindBot Chat
-WindBot Chat is powered by [socket.io](http://socket.io/) for the real-time engine, [Redis](http://redis.io) for the back-end database and [React](http://facebook.github.io/react/) for the web page view.
+WindBot Chat is powered by [socket.io](http://socket.io/) for the real-time engine, [Redis](http://redis.io) for the messages store and [React](http://facebook.github.io/react/) for the web page view.
 
 ##Requirements
  - [Node.js](https://nodejs.org/download/) or [io.js](https://iojs.org/) installed
