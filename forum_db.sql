@@ -187,6 +187,37 @@ LOCK TABLES `strikes` WRITE;
 /*!40000 ALTER TABLE `strikes` DISABLE KEYS */;
 /*!40000 ALTER TABLE `strikes` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `subscriptionlog`
+--
+
+DROP TABLE IF EXISTS `subscriptionlog`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `subscriptionlog` (
+  `subscriptionlogid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `subscriptionid` smallint(6) NOT NULL DEFAULT '0',
+  `userid` int(10) unsigned NOT NULL DEFAULT '0',
+  `pusergroupid` smallint(6) NOT NULL DEFAULT '0',
+  `status` smallint(6) NOT NULL DEFAULT '0',
+  `regdate` int(10) unsigned NOT NULL DEFAULT '0',
+  `expirydate` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`subscriptionlogid`),
+  KEY `userid` (`userid`,`subscriptionid`),
+  KEY `subscriptionid` (`subscriptionid`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `subscriptionlog`
+--
+
+LOCK TABLES `subscriptionlog` WRITE;
+/*!40000 ALTER TABLE `subscriptionlog` DISABLE KEYS */;
+INSERT INTO `subscriptionlog` VALUES (1,1,1,6,1,1428465240,1460087700);
+/*!40000 ALTER TABLE `subscriptionlog` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
