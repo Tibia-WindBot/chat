@@ -60,7 +60,6 @@ marked.setOptions({
   pedantic: false,
   sanitize: true,
   smartLists: true,
-  smartypants: true,
   highlight: function (code, lang) {
     var ret = '';
     try {
